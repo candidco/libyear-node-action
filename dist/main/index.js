@@ -122,77 +122,73 @@ var path = __importStar(__nccwpck_require__(1017));
 var environment_1 = __nccwpck_require__(6751);
 var libyear_1 = __nccwpck_require__(286);
 var core = __importStar(__nccwpck_require__(2186));
-var runAction = function (_a) {
-    var env = _a.env, log = _a.log, cwd = _a.cwd;
-    return __awaiter(void 0, void 0, void 0, function () {
-        var json, error, dir, report, totals, _i, metrics_1, metric, val, output;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0: return [4 /*yield*/, fs_1.promises.readFile(env.GITHUB_EVENT_PATH)];
-                case 1:
-                    json = _b.sent();
-                    error = function (msg) {
-                        log.error("::error ::".concat(msg));
-                        return new Error(msg);
-                    };
-                    if (!(env.GITHUB_EVENT_NAME === 'push' ||
-                        env.GITHUB_EVENT_NAME === 'schedule')) return [3 /*break*/, 3];
-                    dir = env.FOLDER ? path.join(cwd, env.FOLDER) : cwd;
-                    return [4 /*yield*/, (0, libyear_1.runLibyear)(dir)];
-                case 2:
-                    report = _b.sent();
-                    log.log('Result: ');
-                    log.table((0, libyear_1.getResultsTable)(report));
-                    // calculate totals
-                    log.log('Totals: ');
-                    totals = (0, libyear_1.getTotals)(report);
-                    for (_i = 0, metrics_1 = libyear_1.metrics; _i < metrics_1.length; _i++) {
-                        metric = metrics_1[_i];
-                        val = totals.get(metric);
-                        log.log("".concat(metric, ": ").concat(val));
-                        output = metric === 'drift' || metric === 'pulse' ? Number(val).toFixed(2) : val;
-                        core.setOutput(metric, output);
-                    }
-                    return [3 /*break*/, 4];
-                case 3:
-                    if (env.GITHUB_EVENT_NAME === 'pull_request') {
-                        throw new Error('TODO');
-                    }
-                    else {
-                        throw error("Unsupported GitHub event: ".concat(env.GITHUB_EVENT_NAME));
-                    }
-                    _b.label = 4;
-                case 4: return [2 /*return*/];
-            }
-        });
-    });
-};
-exports.runAction = runAction;
-var main = function (_a) {
-    var env = _a.env, log = _a.log, cwd = _a.cwd;
-    return __awaiter(void 0, void 0, void 0, function () {
-        var validate, errors, _i, errors_1, error;
-        return __generator(this, function (_b) {
-            validate = environment_1.ENVIRONMENT.decode(env);
-            if ((0, Either_1.isRight)(validate)) {
-                return [2 /*return*/, (0, exports.runAction)({
-                        env: validate.right,
-                        log: log,
-                        cwd: cwd,
-                    })];
-            }
-            else {
-                errors = PathReporter_1.PathReporter.report(validate);
-                for (_i = 0, errors_1 = errors; _i < errors_1.length; _i++) {
-                    error = errors_1[_i];
-                    log.error(error);
+var runAction = function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
+    var json, error, dir, report, totals, _i, metrics_1, metric, val, output;
+    var env = _b.env, log = _b.log, cwd = _b.cwd;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0: return [4 /*yield*/, fs_1.promises.readFile(env.GITHUB_EVENT_PATH)];
+            case 1:
+                json = _c.sent();
+                error = function (msg) {
+                    log.error("::error ::".concat(msg));
+                    return new Error(msg);
+                };
+                if (!(env.GITHUB_EVENT_NAME === 'push' ||
+                    env.GITHUB_EVENT_NAME === 'schedule')) return [3 /*break*/, 3];
+                dir = env.FOLDER ? path.join(cwd, env.FOLDER) : cwd;
+                return [4 /*yield*/, (0, libyear_1.runLibyear)(dir)];
+            case 2:
+                report = _c.sent();
+                log.log('Result: ');
+                log.table((0, libyear_1.getResultsTable)(report));
+                // calculate totals
+                log.log('Totals: ');
+                totals = (0, libyear_1.getTotals)(report);
+                for (_i = 0, metrics_1 = libyear_1.metrics; _i < metrics_1.length; _i++) {
+                    metric = metrics_1[_i];
+                    val = totals.get(metric);
+                    log.log("".concat(metric, ": ").concat(val));
+                    output = metric === 'drift' || metric === 'pulse' ? Number(val).toFixed(2) : val;
+                    core.setOutput(metric, output);
                 }
-                throw new Error('Invalid config, unable to continue');
-            }
-            return [2 /*return*/];
-        });
+                return [3 /*break*/, 4];
+            case 3:
+                if (env.GITHUB_EVENT_NAME === 'pull_request') {
+                    throw new Error('TODO');
+                }
+                else {
+                    throw error("Unsupported GitHub event: ".concat(env.GITHUB_EVENT_NAME));
+                }
+                _c.label = 4;
+            case 4: return [2 /*return*/];
+        }
     });
-};
+}); };
+exports.runAction = runAction;
+var main = function (_a) { return __awaiter(void 0, [_a], void 0, function (_b) {
+    var validate, errors, _i, errors_1, error;
+    var env = _b.env, log = _b.log, cwd = _b.cwd;
+    return __generator(this, function (_c) {
+        validate = environment_1.ENVIRONMENT.decode(env);
+        if ((0, Either_1.isRight)(validate)) {
+            return [2 /*return*/, (0, exports.runAction)({
+                    env: validate.right,
+                    log: log,
+                    cwd: cwd,
+                })];
+        }
+        else {
+            errors = PathReporter_1.PathReporter.report(validate);
+            for (_i = 0, errors_1 = errors; _i < errors_1.length; _i++) {
+                error = errors_1[_i];
+                log.error(error);
+            }
+            throw new Error('Invalid config, unable to continue');
+        }
+        return [2 /*return*/];
+    });
+}); };
 exports.main = main;
 
 
@@ -6646,7 +6642,7 @@ const getTotals = (dependencies) => {
     const totals = new Map();
     dependencies.forEach((dependency) => {
         constants_1.metrics.forEach((metric) => {
-            if (!isNaN(dependency[metric])) {
+            if (!Number.isNaN(dependency[metric])) {
                 const acc = totals.has(metric) ? totals.get(metric) : 0;
                 const cur = dependency[metric];
                 totals.set(metric, acc + cur);
