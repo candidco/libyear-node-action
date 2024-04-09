@@ -7,6 +7,8 @@ import { Environment, ENVIRONMENT } from './environment';
 import { runLibyear, getTotals, metrics, getResultsTable } from './libyear';
 import { Logger } from './types';
 
+import * as core from '@actions/core';
+
 export const runAction = async ({
   env,
   log,
@@ -41,7 +43,7 @@ export const runAction = async ({
       log.log(`${metric}: ${val}`);
       const output =
         metric === 'drift' || metric === 'pulse' ? Number(val).toFixed(2) : val;
-      log.log(`::set-output name=${metric}::${output}`);
+      core.setOutput(metric, output);
     }
   } else if (env.GITHUB_EVENT_NAME === 'pull_request') {
     throw new Error('TODO');
