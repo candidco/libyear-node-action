@@ -101,9 +101,9 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Use Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v4
       with:
-        node-version: 10.x
+        node-version: 20.x
 
     # Install dependencies and run libyear
     # (notice how the libyear step has an id, this is referenced later)
